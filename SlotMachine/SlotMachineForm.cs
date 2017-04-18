@@ -13,11 +13,11 @@ namespace SlotMachine
 {
     public partial class SlotMachineForm : Form
     {
-        private int playerMoney = 1000;
+        private int playerMoney = 500;
         private int winnings = 0;
-        private int jackpot = 5000;
+        private int jackpot = 10000;
         private float turn = 0.0f;
-        private int playerBet = 0;
+        private int playerBet = 1;
         private float winNumber = 0.0f;
         private float lossNumber = 0.0f;
         private string[] spinResult;
@@ -32,6 +32,9 @@ namespace SlotMachine
         private int bells = 0;
         private int sevens = 0;
         private int blanks = 0;
+        
+
+
 
         private Random random = new Random();
 
@@ -43,6 +46,20 @@ namespace SlotMachine
         /* Utility function to show Player Stats */
         private void showPlayerStats()
         {
+            TotalCreditsLabel.Text = playerMoney.ToString("C");
+            BetLabel.Text = playerBet.ToString("C");
+            InfoLabel.Text = jackpot.ToString("C");
+
+            if(playerMoney < playerBet)
+            {
+                SpinPictureBox.Visible = false;
+                MessageBox.Show("Bet is more than player's money.", "Cannot bet !");
+            }
+            else
+            {
+                SpinPictureBox.Visible = true;
+            }
+
             winRatio = winNumber / turn;
             lossRatio = lossNumber / turn;
             string stats = "";
@@ -53,7 +70,9 @@ namespace SlotMachine
             stats += ("Losses: " + lossNumber + "\n");
             stats += ("Win Ratio: " + (winRatio * 100) + "%\n");
             stats += ("Loss Ratio: " + (lossRatio * 100) + "%\n");
-            MessageBox.Show(stats, "Player Stats");
+            //MessageBox.Show(stats, "Player Stats");
+
+            
         }
 
         /* Utility function to reset all fruit tallies*/
@@ -72,14 +91,16 @@ namespace SlotMachine
         /* Utility function to reset the player stats */
         private void resetAll()
         {
-            playerMoney = 1000;
+            playerMoney = 500;
             winnings = 0;
-            jackpot = 5000;
+            jackpot = 10000;
             turn = 0;
-            playerBet = 0;
+            playerBet = 1;
             winNumber = 0;
             lossNumber = 0;
             winRatio = 0.0f;
+            WinLabel.Text = "$0.00";
+
         }
 
         /* Check to see if the player won the jackpot */
@@ -91,6 +112,7 @@ namespace SlotMachine
             if (jackPotTry == jackPotWin)
             {
                 MessageBox.Show("You Won the $" + jackpot + " Jackpot!!","Jackpot!!");
+
                 playerMoney += jackpot;
                 jackpot = 1000;
             }
@@ -100,7 +122,11 @@ namespace SlotMachine
         private void showWinMessage()
         {
             playerMoney += winnings;
-            MessageBox.Show("You Won: $" + winnings, "Winner!");
+
+            //MessageBox.Show("You Won: $" + winnings, "Winner!");
+
+            WinLabel.Text = winnings.ToString("c");
+
             resetFruitTally();
             checkJackPot();
         }
@@ -109,7 +135,11 @@ namespace SlotMachine
         private void showLossMessage()
         {
             playerMoney -= playerBet;
-            MessageBox.Show("You Lost!", "Loss!");
+
+            WinLabel.Text = "$0.00";
+
+            //MessageBox.Show("You Lost!", "Loss!");
+            
             resetFruitTally();
         }
 
@@ -124,6 +154,7 @@ namespace SlotMachine
     e.g. Bar - Orange - Banana */
         private string[] Reels()
         {
+            PictureBox[] picture = {SpinBox1,SpinBox2,SpinBox3};
             string[] betLine = { " ", " ", " " };
             int[] outCome = { 0, 0, 0 };
 
@@ -133,34 +164,42 @@ namespace SlotMachine
 
                if (checkRange(outCome[spin], 1, 27)) {  // 41.5% probability
                     betLine[spin] = "blank";
+                    picture[spin].Image = Properties.Resources.blank;
                     blanks++;
                     }
                 else if (checkRange(outCome[spin], 28, 37)){ // 15.4% probability
                     betLine[spin] = "Grapes";
+                    picture[spin].Image = Properties.Resources.grapes;
                     grapes++;
                 }
                 else if (checkRange(outCome[spin], 38, 46)){ // 13.8% probability
                     betLine[spin] = "Banana";
+                    picture[spin].Image = Properties.Resources.banana;
                     bananas++;
                 }
                 else if (checkRange(outCome[spin], 47, 54)){ // 12.3% probability
                     betLine[spin] = "Orange";
+                    picture[spin].Image = Properties.Resources.orange;
                     oranges++;
                 }
                 else if (checkRange(outCome[spin], 55, 59)){ //  7.7% probability
                     betLine[spin] = "Cherry";
+                    picture[spin].Image = Properties.Resources.cherry;
                     cherries++;
                 }
                 else if (checkRange(outCome[spin], 60, 62)){ //  4.6% probability
                     betLine[spin] = "Bar";
+                    picture[spin].Image = Properties.Resources.bar;
                     bars++;
                 }
                 else if (checkRange(outCome[spin], 63, 64)){ //  3.1% probability
                     betLine[spin] = "Bell";
+                    picture[spin].Image = Properties.Resources.bell;
                     bells++;
                 }
                 else if (checkRange(outCome[spin], 65, 65)){ //  1.5% probability
                     betLine[spin] = "Seven";
+                    picture[spin].Image = Properties.Resources.seven;
                     sevens++;
                 }
 
@@ -250,8 +289,6 @@ namespace SlotMachine
 
         private void SpinPictureBox_Click(object sender, EventArgs e)
         {
-            playerBet = 10; // default bet amount
-
             if (playerMoney == 0)
             {
                 if (MessageBox.Show("You ran out of Money! \nDo you want to play again?","Out of Money!",MessageBoxButtons.YesNo) == DialogResult.Yes)
@@ -272,7 +309,8 @@ namespace SlotMachine
             {
                 spinResult = Reels();
                 fruits = spinResult[0] + " - " + spinResult[1] + " - " + spinResult[2];
-                MessageBox.Show(fruits);
+                //MessageBox.Show(fruits);
+
                 determineWinnings();
                 turn++;
                 showPlayerStats();
@@ -281,6 +319,77 @@ namespace SlotMachine
             {
                 MessageBox.Show("Please enter a valid bet amount");
             }
+        }
+        private void setPlayerBet(object sender, EventArgs e)
+        {
+            if(sender == BetButton1)
+            {
+                playerBet = 1;              
+            }
+            else if (sender == BetButton2)
+            {
+                playerBet = 2;
+            }
+            else if (sender == BetButton5)
+            {
+                playerBet = 5;
+            }
+            else if (sender == BetButton10)
+            {
+                playerBet = 10;
+            }
+            else if (sender == BetButton25)
+            {
+                playerBet = 25;
+            }
+            else if (sender == BetButton50)
+            {
+                playerBet = 50;
+            }
+            else if (sender == BetButton100)
+            {
+                playerBet = 100;
+            }
+            else if (sender == BetButton500)
+            {
+                playerBet = 500;
+            }
+            else
+            {
+                playerBet = 1; // default bet
+            }
+
+            showPlayerStats();
+        }
+
+        private void ResetButton_Click(object sender, EventArgs e)
+        {
+            resetAll();
+            showPlayerStats();  
+        }
+
+        private void ExitButton_Click(object sender, EventArgs e)
+        {
+            Application.Exit();
+        }
+
+        private void CreditButton_Click(object sender, EventArgs e)
+        {
+            if (playerMoney > 0)
+            { 
+                MessageBox.Show("Your credit ticket is printing.", "Print");
+            }
+            else
+            {
+                MessageBox.Show("No money!");
+            }
+            resetAll();
+        }
+
+        private void SlotMachineForm_Load(object sender, EventArgs e)
+        {
+            WinLabel.Text = "$0.00";
+            showPlayerStats();
         }
     }
 
