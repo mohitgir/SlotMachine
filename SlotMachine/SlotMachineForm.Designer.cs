@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             this.SpinPictureBox = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.ExitButton = new System.Windows.Forms.PictureBox();
@@ -43,7 +42,6 @@
             this.TotalCreditsLabel = new System.Windows.Forms.Label();
             this.WinLabel = new System.Windows.Forms.Label();
             this.InfoLabel = new System.Windows.Forms.Label();
-            this.SlotMachineTimer = new System.Windows.Forms.Timer(this.components);
             this.BetButton50 = new System.Windows.Forms.PictureBox();
             this.BetButton10 = new System.Windows.Forms.PictureBox();
             this.BetButton2 = new System.Windows.Forms.PictureBox();
@@ -374,7 +372,6 @@
         private System.Windows.Forms.Label TotalCreditsLabel;
         private System.Windows.Forms.Label WinLabel;
         private System.Windows.Forms.Label InfoLabel;
-        private System.Windows.Forms.Timer SlotMachineTimer;
         private System.Windows.Forms.PictureBox BetButton50;
         private System.Windows.Forms.PictureBox BetButton10;
         private System.Windows.Forms.PictureBox BetButton2;
