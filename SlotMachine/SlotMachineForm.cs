@@ -1,4 +1,9 @@
-﻿using System;
+﻿//App name : Slot Machine
+//Author's name: Mohit Gir #200334595
+//App Creation Date: 17th April 2017
+//App description: A slot machine gives all the information about the money player has, lost or won.
+
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
